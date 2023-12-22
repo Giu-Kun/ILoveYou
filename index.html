@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Loader</title>
+    <style>
+        /* Add your custom styles for the loading screen here */
+        #loading-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        #love-message {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #countdown {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        #event-message {
+            margin-top: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div id="loading-screen">
+    <div id="love-message"></div>
+    <div id="countdown"></div>
+    <div id="event-message"></div>
+</div>
+
+<script>
+    const loveMessages = ["I Love you"];
+   const eventMessages = [
+    "A special moment just for you!",
+    "Surprise! You are amazing!",
+    "Sending you extra love today!",
+    "You make my heart skip a beat!",
+    "Today is all about you!",
+    "Am I thinking about you right now?... yes... the answer is always yes...",
+    "Are you the best thing that ever happened to me? Yes you are!",
+    "Yes, I do. I really, really love you.",
+    "Do you know how much you mean to me? A ton.",
+    "Can you feel my heartbeat when I think about you?",
+    "Is there anything better than being with you? (psst. spoiler: The answer is \"No\")",
+    "Have I told you lately that I love you?",
+    "In the symphony of our love, every note is a beautiful melody composed just for you.",
+    "You are the bright star in the night sky of my heart, guiding me through every moment with your love.",
+    "Our love is like a timeless melody, echoing through the highs and lows of life.",
+    "With you, every day is a love song, a harmonious rhythm that beats in sync with our hearts.",
+    "You are my everything, the melody that turns my life into a beautiful song of joy and happiness.",
+    "No glitch in our love matrix, just a perfect connection that grows stronger every day.",
+    "Unexpected joy in the love algorithm, making every moment with you a delightful surprise."
+];
+
+const unluckyEventMessage = [
+    "Oops! It seems there's a glitch in the love matrix.",
+    "The love fairy got distracted. Try again!",
+    "Unexpected error in the love algorithm. Apologies!",
+    "Love connection lost. Please refresh and retry.",
+    "Gremlins in the love machinery. Better luck next time!",
+    "System overload! Love.exe crashed. Reload for more love.",
+    "Spilled the love potion. Don't worry, we'll make a new one!",
+    "Error 404: Love not found. Try reopening your heart!",
+    "The love server is down. Please wait for maintenance.",
+    "Unexpected love turbulence. Brace yourself for the next attempt!",
+    "Love signal lost. Reboot your feelings and try again!",
+    "Love satellite offline. Please stand by for reconnection.",
+    "Oops! Cupid's arrow took a detour. Better luck next time in the love lottery!",
+    "Love fairy on a coffee break. Give it another shot for an enchanting connection!",
+    "Temporary malfunction in the love machinery. Apologies for the inconvenience!",
+    "Love.exe experiencing a brief hiccup. Reload and try again for a smoother connection.",
+    "Gremlins playing in the love garden. Watch out for a more magical attempt!",
+    "System overload! Love.exe needs a reboot. Refresh for a love upgrade.",
+    "Spilled a bit of the love potion. Don't worry, we're mixing up a stronger batch!",
+    "Error 405: Cupid on vacation. Reopen your heart for a cupid-approved connection!",
+    "The love server is taking a coffee break. Please be patient for a heartwarming restart.",
+    "Unexpected love turbulence, but don't worry; the next attempt promises smoother skies!"
+];
+
+
+    // Adjust this variable to change the timer range (in seconds)
+    const timerRange = {
+        loadingMin: 60,
+        loadingMax: 604800,
+        eventMessageDisplay: 4
+    };
+
+    function showLoveMessage() {
+        const loveMessage = selectLoveMessage();
+        displayLoveMessage(loveMessage);
+        const loadingTime = Math.floor(Math.random() * (timerRange.loadingMax - timerRange.loadingMin + 1)) + timerRange.loadingMin;
+        startCountdown(loadingTime);
+    }
+
+    function selectLoveMessage() {
+        return loveMessages[Math.floor(Math.random() * loveMessages.length)];
+    }
+
+    function displayLoveMessage(message) {
+        document.getElementById('love-message').innerText = message;
+    }
+
+    function startCountdown(loadingTime) {
+        let countdownValue = loadingTime;
+
+        function updateCountdown() {
+            const countdownElement = document.getElementById('countdown');
+
+            const hours = Math.floor(countdownValue / 3600);
+            const minutes = Math.floor((countdownValue % 3600) / 60);
+            const seconds = countdownValue % 60;
+
+            let countdownText = '';
+
+            if (hours > 0) {
+                countdownText += `${hours}h `;
+            }
+
+            if (minutes > 0 || hours > 0) {
+                countdownText += `${minutes}m `;
+            }
+
+            countdownText += `${seconds}s`;
+
+            countdownElement.innerText = countdownText;
+
+            if (countdownValue > 0) {
+                countdownValue--;
+                setTimeout(updateCountdown, 1000);
+            } else {
+                countdownElement.innerText = ''; // Clear countdown
+                showRandomEvent();
+            }
+        }
+
+        updateCountdown();
+    }
+
+    function showRandomEvent() {
+        const isPositiveEvent = Math.random() <= 0.8; // 80% chance of positive event
+        const eventMessageElement = document.getElementById('event-message');
+
+        if (isPositiveEvent) {
+            const positiveEventMessage = eventMessages[Math.floor(Math.random() * eventMessages.length)];
+            eventMessageElement.innerText = positiveEventMessage;
+        } else {
+            eventMessageElement.innerText = unluckyEventMessage;
+        }
+
+        setTimeout(() => {
+            eventMessageElement.innerText = '';
+            showLoveMessage();
+        }, timerRange.eventMessageDisplay * 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', showLoveMessage);
+</script>
+
+</body>
+</html>
