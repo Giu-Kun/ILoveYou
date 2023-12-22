@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Loader</title>
+    <style>
+        /* Add your custom styles for the loading screen here */
+        #loading-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        #love-message {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #countdown {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        #event-message {
+            margin-top: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div id="loading-screen">
+    <div id="love-message"></div>
+    <div id="countdown"></div>
+    <div id="event-message"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    socket.on('updateCountdown', (remainingTime) => {
+        startCountdown(remainingTime);
+    });
+
+    function showLoveMessage() {
+        const loveMessage = selectLoveMessage();
+        displayLoveMessage(loveMessage);
+
+        // Notify the server that a love message is displayed
+        socket.emit('loveDisplayed');
+    }
+
+    function selectLoveMessage() {
+        return "I Love you"; // You can modify this logic based on your requirements
+    }
+
+    function displayLoveMessage(message) {
+        document.getElementById('love-message').innerText = message;
+    }
+
+    function startCountdown(remainingTime) {
+        let countdownValue = remainingTime;
+
+        function updateCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            countdownElement.innerText = formatCountdownText(countdownValue);
+
+            if (countdownValue > 0) {
+                countdownValue--;
+                setTimeout(updateCountdown, 1000);
+            } else {
+                countdownElement.innerText = ''; // Clear countdown
+                showRandomEvent();
+            }
+        }
+
+        updateCountdown();
+    }
+
+    function formatCountdownText(remainingTime) {
+        const hours = Math.floor(remainingTime / 3600);
+        const minutes = Math.floor((remainingTime % 3600) / 60);
+        const seconds = remainingTime % 60;
+
+        let countdownText = '';
+
+        if (hours > 0) {
+            countdownText += `${hours}h `;
+        }
+
+        if (minutes > 0 || hours > 0) {
+            countdownText += `${minutes}m `;
+        }
+
+        countdownText += `${seconds}s`;
+
+        return countdownText;
+    }
+
+    function showRandomEvent() {
+        const eventMessageElement = document.getElementById('event-message');
+        // Logic for showing random event here
+        // ...
+
+        setTimeout(() => {
+            eventMessageElement.innerText = '';
+            showLoveMessage();
+        }, 4000); // Assuming a 4-second display time for event messages
+    }
+
+    document.addEventListener('DOMContentLoaded', showLoveMessage);
+</script>
+
+</body>
+</html>
